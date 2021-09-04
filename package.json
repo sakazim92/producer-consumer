@@ -1,0 +1,22 @@
+{
+  "name": "producer-consumer",
+  "version": "1.0.0",
+  "description": "producer consumer problem",
+  "main": "server.js",
+  "scripts": {
+    "consumer": "node src/apps/consumer.js",
+    "producer": "node src/apps/producer.js",
+    "generator": "node src/apps/generator.js",
+    "test": "jest"
+  },
+  "author": "Ali Kazim",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1",
+    "socket.io": "^4.2.0"
+  },
+  "devDependencies": {
+    "axios": "^0.21.1",
+    "jest": "^27.1.0"
+  }
+}

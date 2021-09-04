@@ -1,0 +1,76 @@
+<html>
+   <head>
+      <script src="../utils/config.utility.js"></script>
+      <script src="https://cdn.socket.io/3.1.3/socket.io.min.js" integrity="sha384-cPwlPLvBTa3sKAgddT6krw0cJat7egBga3DJepJyrLl4Q9/5WLra3rrnMcyTyOnh" crossorigin="anonymous"></script>
+      <script type = "text/javascript">
+         /**
+          * Create client socket.io connection with producer and start listening to data
+          */
+         function initiateProducerSocket() {
+            var pSocket = io(`http://localhost:${PRODUCER_SOCKET_IO_PORT}`, { secure: true, reconnection: true, rejectUnauthorized: false,  transports: [ 'websocket' ] });
+
+            pSocket.io.on('connection', () => {
+               console.log('connected to server')
+            })
+
+            pSocket.on("connect_error", (err) => {
+               console.log(`connect_error due to ${err.message}`, {err});
+            });
+
+            pSocket.on('producer-client', function(data) {
+                const textarea = document.getElementById('pid')
+                textarea.value += "\n" + data
+                textarea.scrollTop = textarea.scrollHeight
+            });
+            
+            pSocket.on('error', console.error.bind(console));
+            pSocket.on('message', console.log.bind(console));
+         }
+         /**
+          * Create client socket.io connection with consumer and start listening to data
+          */
+         function initiateConsumerSocket() {
+
+            var cSocket = io(`http://localhost:${CONSUMER_SOCKET_IO_PORT}`, { secure: true, reconnection: true, rejectUnauthorized: false,  transports: [ 'websocket' ] });
+
+            cSocket.io.on('connection', () => {
+               console.log('connected to server')
+            })
+
+            cSocket.on("connect_error", (err) => {
+               console.log(`connect_error due to ${err.message}`, {err});
+            });
+
+            cSocket.on('consumer-client', function(data) {
+                const textarea = document.getElementById('cid')
+                textarea.value += "\n" + data
+                textarea.scrollTop = textarea.scrollHeight
+            });
+            
+            cSocket.on('error', console.error.bind(console));
+            cSocket.on('message', console.log.bind(console));
+         }
+      </script>
+		
+   </head>
+   
+   <body>
+      <div class="row">
+         <h2>Producer Logs:</h2>
+         <textarea id="pid" rows="10" cols="50%" wrap="hard" style="border:solid 1px black;"/>
+         </textarea>
+      </div>
+      <br>
+      <div class="row">
+         <h2>Consumer Logs:</h2>
+         <textarea id="cid" rows="10" cols="50%" wrap="hard" style="border:solid 1px black;">
+         
+         </textarea>
+      </div>
+      
+   </body>
+   <script>
+      initiateProducerSocket()
+      initiateConsumerSocket()
+   </script>
+</html>
